@@ -1,5 +1,7 @@
 # Observatório Financeiro da UPE
-Repositório para o observatório desenvolvido para a Pro-reitoria Administrativa da UPE.
+Repositório para o observatório desenvolvido para a Pro-reitoria Administrativa da UPE. Este projeto foi desenvolvido como parte da Residência em Ciência de Dados e Analytics da UPE. A fonte de dados utilizada para o desenvolvimento é proveniente do acervo de dados abertos do Portal da Transparência do Governo de Pernambuco.
+
+Nota: Este observatório foi desenvolvido como modelo piloto para potenciais aplicações futuras.
 
 # Guia de Configuração e Execução do Dashboard
 
@@ -9,7 +11,7 @@ Este guia orienta o processo de preparação do ambiente e execução da aplica�
 
 O Streamlit é uma biblioteca Python e pode ser instalado diretamente via gerenciador de pacotes `pip`.
 
-> 💡 **Recomendação:** Embora não seja obrigatório, recomenda-se a utilização de um ambiente virtual (como `venv` ou `conda`) para evitar potenciais conflitos de dependências entre diferentes versões do Python e de outras bibliotecas de seu sistema.
+> **Recomendação:** Embora não seja obrigatório, recomenda-se a utilização de um ambiente virtual (como `venv` ou `conda`) para evitar potenciais conflitos de dependências entre diferentes versões do Python e de outras bibliotecas de seu sistema.
 
 Execute o comando abaixo no terminal para realizar a instalação:
 
@@ -56,7 +58,7 @@ streamlit run .\dashboard.py --server.port 8888
 
 Após a inicialização do servidor, a aplicação estará acessível no navegador através da porta indicada (`http://localhost:8888`).
 
-### 📚 Referências Úteis
+### Referências Úteis
 
 Para entender melhor a sintaxe e as possibilidades de customização do Streamlit, os seguintes repositórios servem como ótimas fontes de consulta prática:
 
