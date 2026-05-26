@@ -1,0 +1,5 @@
+- [ ] Adicionar outra aba (Gestão Estratégica)
+- [ ] Revisar perguntas de negócio
+- [ ] Formatar valores para unidades apresentáveis
+- [ ] Formatar dados categóricos 
+- [ ] Aplicação de modelo de previsão
