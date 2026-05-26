@@ -3,13 +3,13 @@ import plotly.express as px
 import pandas as pd
 import os
 
-# ================= CONFIGURAÇÃO DA PÁGINA =================
+# CONFIGURAÇÃO DA PÁGINA 
 st.set_page_config(page_title="UPE - Despesas Governamentais", page_icon="🏛️", layout="wide")
 
 st.title("🏛️ UPE - Dashboard de Despesas Públicas")
 st.markdown("Análise da execução orçamentária e fornecedores baseada nos dados do e-Fisco.")
 
-# ================= CARREGAMENTO DE DADOS =================
+# CARREGAMENTO DE DADOS 
 @st.cache_data
 def load_data(file):
     # Lendo o CSV delimitado por ponto e vírgula
@@ -29,7 +29,7 @@ else:
         st.warning("Nenhum arquivo carregado e arquivo local não encontrado.")
         st.stop()
 
-# ================= TRATAMENTO DE DADOS =================
+# TRATAMENTO DE DADOS 
 # Converter datas
 df["Data de Lançamento"] = pd.to_datetime(df["data"], errors="coerce")
 df["Ano"] = df["Data de Lançamento"].dt.year
@@ -43,7 +43,7 @@ for col in colunas_monetarias:
         df[col] = df[col].str.replace(',', '.', regex=False)
     df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0)
 
-# ================= FILTROS LATERAIS (GLOBAIS) =================
+# FILTROS LATERAIS (GLOBAIS) 
 st.sidebar.header("🔍 Filtros Globais")
 
 # Evitar erros com NA nos filtros
@@ -62,10 +62,10 @@ if unidades:
 if modalidades:
     df_filtro = df_filtro[df_filtro["modalidade_empenho"].isin(modalidades)]
 
-# ================= ABAS DO DASHBOARD =================
+# ABAS DO DASHBOARD 
 tab1, tab2 = st.tabs(["🏛️ Gestão Executiva e Orçamentária", "🤝 Fornecedores e Contratações"])
 
-# ================= ABA 1: GESTÃO EXECUTIVA =================
+# ABA 1: GESTÃO EXECUTIVA 
 with tab1:
     st.subheader("Visão Macro da Execução do Orçamento")
     
@@ -142,7 +142,7 @@ with tab1:
     fig3.update_layout(barmode="stack", yaxis={'categoryorder': 'total ascending'}, legend=dict(orientation="h", y=-0.2))
     st.plotly_chart(fig3, use_container_width=True)
 
-# ================= ABA 2: FORNECEDORES E CONTRATAÇÕES =================
+# ABA 2: FORNECEDORES E CONTRATAÇÕES 
 with tab2:
     st.subheader("Análise de Mercado e Modalidades Licitatórias")
     
@@ -221,7 +221,7 @@ with tab2:
     )
     st.plotly_chart(fig6, use_container_width=True)
 
-# ================= TABELA DE DADOS & DOWNLOAD =================
+# TABELA DE DADOS & DOWNLOAD 
 st.divider()
 with st.expander("📄 Visualizar Tabela de Dados Brutos"):
     st.dataframe(df_filtro)
