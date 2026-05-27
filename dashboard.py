@@ -15,7 +15,6 @@ st.markdown("Análise da execução orçamentária e fornecedores baseada nos da
 # CARREGAMENTO DE DADOS 
 @st.cache_data
 def load_data(file):
-    # Lendo o CSV delimitado por ponto e vírgula
     df = pd.read_csv(file, sep=",", encoding="utf-8")
     return df
 
@@ -24,7 +23,6 @@ fl = st.file_uploader("Upload da planilha de Despesas (CSV)", type=["csv"])
 if fl is not None:
     df = load_data(fl)
 else:
-    # Caso não faça upload, tenta ler um arquivo local (ajuste o caminho se necessário)
     st.info("Aguardando upload do arquivo CSV. Carregando dados de exemplo locais (se disponíveis)...")
     try:
         df = load_data("arquivos_concatenados.csv")
@@ -57,8 +55,8 @@ if modalidades:
 
 # ABAS DO DASHBOARD 
 tab_1, tab_2, tab_3 = st.tabs(["Gestão Executiva e Orçamentária", 
-                                      "Empenhos",
-                                      "Fornecedores e Contratações"])
+                                "Empenhos",
+                                "Credores"])
 #   tab_4 = "Alocação de Políticas Públicas"
 
 # ABA 1: GESTÃO EXECUTIVA 

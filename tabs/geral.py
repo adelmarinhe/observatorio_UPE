@@ -1,8 +1,10 @@
 import streamlit as st
 import plotly.express as px
+import utils
 
 def generate_tab(df_filtro, colunas_monetarias):
     st.subheader("Visão Macro da Execução do Orçamento")
+    st.divider()
     
     total_empenhado = df_filtro["valor_empenhado"].sum()
     total_liquidado = df_filtro["valor_liquidado"].sum()
@@ -10,9 +12,9 @@ def generate_tab(df_filtro, colunas_monetarias):
     indice_execucao = (total_liquidado / total_empenhado * 100) if total_empenhado > 0 else 0
     
     k1, k2, k3, k4 = st.columns(4)
-    k1.metric("Total Empenhado", f"R$ {total_empenhado:,.2f}")
-    k2.metric("Total Liquidado", f"R$ {total_liquidado:,.2f}")
-    k3.metric("Total Pago", f"R$ {total_pago:,.2f}")
+    k1.metric("Total Empenhado", f"R$ {(total_empenhado/(pow(10, 6))):,.2f} M")
+    k2.metric("Total Liquidado", f"R$ {(total_liquidado/(pow(10, 6))):,.2f} M")
+    k3.metric("Total Pago", f"R$ {(total_pago/(pow(10, 6))):,.2f} M")
     k4.metric("Índice de Execução", f"{indice_execucao:.1f}%")
     
     st.divider()
@@ -27,7 +29,7 @@ def generate_tab(df_filtro, colunas_monetarias):
             df_evolucao, 
             x="Mês/Ano", 
             y=colunas_monetarias,
-            labels={"value": "Valor (R$)", "variable": "Tipo de Valor", "Mês/Ano": "Mês"},
+            labels=utils.nomes_atributos,
             color_discrete_sequence=["#1f77b4", "#ff7f0e", "#2ca02c"]
         )
         fig1.update_layout(legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
@@ -43,7 +45,7 @@ def generate_tab(df_filtro, colunas_monetarias):
             x="valor_total",
             y="fonte_recurso",
             orientation="h",
-            labels={"valor_total": "Valor Total (R$)", "fonte_recurso": "Fonte de Recurso"},
+            labels=utils.nomes_atributos,
             color="valor_total",
             color_continuous_scale="Blues"
         )
