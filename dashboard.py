@@ -6,7 +6,7 @@ import os
 # CONFIGURAÇÃO DA PÁGINA 
 st.set_page_config(page_title="UPE - Despesas Governamentais", page_icon="🏛️", layout="wide")
 
-st.title("🏛️ UPE - Dashboard de Despesas Públicas")
+st.title("UPE - Dashboard de Despesas Públicas")
 st.markdown("Análise da execução orçamentária e fornecedores baseada nos dados do e-Fisco.")
 
 # CARREGAMENTO DE DADOS 
@@ -76,10 +76,10 @@ with tab_1:
     indice_execucao = (total_liquidado / total_empenhado * 100) if total_empenhado > 0 else 0
     
     k1, k2, k3, k4 = st.columns(4)
-    k1.metric("💰 Total Empenhado", f"R$ {total_empenhado:,.2f}")
-    k2.metric("📦 Total Liquidado", f"R$ {total_liquidado:,.2f}")
-    k3.metric("💸 Total Pago", f"R$ {total_pago:,.2f}")
-    k4.metric("⚙️ Índice de Execução", f"{indice_execucao:.1f}%")
+    k1.metric("Total Empenhado", f"R$ {total_empenhado:,.2f}")
+    k2.metric("Total Liquidado", f"R$ {total_liquidado:,.2f}")
+    k3.metric("Total Pago", f"R$ {total_pago:,.2f}")
+    k4.metric("Índice de Execução", f"{indice_execucao:.1f}%")
     
     st.divider()
     col1_1, col1_2 = st.columns(2)
@@ -129,9 +129,9 @@ with tab_2:
     taxa_dispensa = (dispensa_inex / total_pago * 100) if total_pago > 0 else 0
 
     k2_1, k2_2, k2_3 = st.columns(3)
-    k2_1.metric("🏢 Credores Únicos", credores_unicos)
-    k2_2.metric("📄 Processos Licitatórios", processos_licitatorios)
-    k2_3.metric("⚠️ Gastos por Dispensa/Inexigibilidade (%)", f"{taxa_dispensa:.1f}%")
+    k2_1.metric("Credores Únicos", credores_unicos)
+    k2_2.metric("Processos Licitatórios", processos_licitatorios)
+    k2_3.metric("Gastos por Dispensa/Inexigibilidade (%)", f"{taxa_dispensa:.1f}%")
 
     st.divider()
     col2_1, col2_2 = st.columns(2)
@@ -186,7 +186,7 @@ with tab_2:
         color_continuous_scale="Blues"
     )
     st.plotly_chart(fig_5, use_container_width=True)
-    
+
 # ABA 3:
 with tab_3:
     st.subheader("Análise de Valores Empenhados por Ação e Função")
@@ -231,7 +231,7 @@ with tab_3:
 
 # ABA 4: EMPENHOS
 with tab_4:
-    st.subheader("📊 Métricas de Empenhos Realizados")
+    st.subheader("Métricas de Empenhos Realizados")
 
     # Cálculos dos KPIs (Baseados na tabela já filtrada lateralmente)
     total_empenhado_filtrado = df_filtro['valor_empenhado'].sum()
@@ -239,8 +239,8 @@ with tab_4:
 
     # Construção do layout de cartões
     k4_1, k4_2 = st.columns(2)
-    k4_1.metric("💰 Valor Total Empenhado (Filtro)", f"R$ {total_empenhado_filtrado:,.2f}")
-    k4_2.metric("📄 Quantidade Total de Empenhos", f"{qtd_empenhos_filtrado[0]}")
+    k4_1.metric("Valor Total Empenhado (Filtro)", f"R$ {total_empenhado_filtrado:,.2f}")
+    k4_2.metric("Quantidade Total de Empenhos", f"{qtd_empenhos_filtrado[0]}")
 
     st.divider()
 
@@ -258,7 +258,7 @@ with tab_4:
             labels={'valor_empenhado': 'Faixas de Valor Empenhado (R$)', 'count': 'Quantidade de Ocorrências'},
             color_discrete_sequence=["#1f77b4"]
         )
-        # Melhorias estéticas de layout (Títulos de eixos legíveis e fundo limpo)
+        
         fig_8.update_layout(
             yaxis_title="Quantidade de Empenhos",
             xaxis_title="Valor do Empenho (R$)",
@@ -293,7 +293,7 @@ with st.expander("Tabela de Dados Brutos"):
 
     csv = df_filtro.to_csv(index=False, sep=";").encode("utf-8")
     st.download_button(
-        label="⬇️ Baixar dados filtrados (CSV)",
+        label="Baixar dados filtrados (CSV)",
         data=csv,
         file_name="despesas_upe_filtradas.csv",
         mime="text/csv"
