@@ -33,17 +33,9 @@ else:
         st.stop()
 
 # TRATAMENTO DE DADOS 
-# Converter datas
-df["Data de Lançamento"] = pd.to_datetime(df["data"], errors="coerce")
-df["Ano"] = df["Data de Lançamento"].dt.year
-df["Mês/Ano"] = df["Data de Lançamento"].dt.to_period("M").astype(str)
-
-# Limpar colunas de valores (garantir que sejam float)
+df = tratamento.treat_dates(df)
 colunas_monetarias = ["valor_empenhado", "valor_liquidado", "valor_total"]
-for col in colunas_monetarias:
-    if df[col].dtype == object:
-        df[col] = df[col].str.replace(',', '.', regex=False)
-    df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0)
+df = tratamento.treat_values(df, colunas_monetarias)
 
 # FILTROS LATERAIS (GLOBAIS) 
 st.sidebar.header("Filtros Globais")

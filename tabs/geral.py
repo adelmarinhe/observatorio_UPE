@@ -1,8 +1,5 @@
 import streamlit as st
-
 import plotly.express as px
-
-
 
 def generate_tab(df_filtro, colunas_monetarias):
     st.subheader("Visão Macro da Execução do Orçamento")

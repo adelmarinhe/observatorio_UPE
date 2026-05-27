@@ -1,7 +1,6 @@
 import streamlit as st
 import plotly.express as px
 
-
 def generate_tab(df_filtro):
     st.subheader("Métricas de Empenhos Realizados")
 
