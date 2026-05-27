@@ -22,5 +22,8 @@ nomes_atributos = {
     "data": "Data",
     "value": "Valor (R$)",
     "count": "Quantidade de Ocorrências",
-    "total": "Total (R$)"
+    "total": "Total (R$)",
+    "qtd_empenhos": "Volume de Empenhos Emitidos (Recorrência)",
+    "credor_curto": "Credor",
+    "Credor_Agrupado": "Credor"
 }
