@@ -34,7 +34,7 @@ Uma nova aba será aberta automaticamente no seu navegador padrão confirmando o
 Para a manipulação de dados e renderização dos gráficos do dashboard, instalamos as bibliotecas **Pandas** e **Plotly**:
 
 ```bash
-pip install pandas plotly numpy
+pip install pandas plotly numpy scikit-learn
 
 ```
 
