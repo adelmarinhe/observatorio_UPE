@@ -81,38 +81,3 @@ def generate_tab(df_filtro):
         fig_area.update_layout(barmode="stack", yaxis={'categoryorder': 'total ascending'}, legend=dict(orientation="h", y=-0.2))
 
         st.plotly_chart(fig_area, use_container_width=True)
-
-    # SEÇÃO DRILLDOWN: FICHA DO CREDOR
-    st.divider()
-    st.subheader("Ficha Individual do Credor")
-    
-    lista_credores_busca = sorted(df_filtro["credor"].dropna().unique())
-    credor_selecionado = st.selectbox("Escolha o Credor:", lista_credores_busca)
-
-    if credor_selecionado:
-        df_individual = df_filtro[df_filtro["credor"] == credor_selecionado]
-        
-        ind_emp = df_individual["valor_empenhado"].sum()
-        ind_liq = df_individual["valor_liquidado"].sum()
-        ind_pag = df_individual["valor_total"].sum()
-        ind_notas = df_individual.shape
-        
-        c_ind1, c_ind2, c_ind3, c_ind4 = st.columns(4)
-        c_ind1.metric("Empenhado", f"R$ {ind_emp:,.2f}")
-        c_ind2.metric("Liquidado", f"R$ {ind_liq:,.2f}")
-        c_ind3.metric("Pago Efetivo", f"R$ {ind_pag:,.2f}")
-        c_ind4.metric("Qtd. Ocorrências (Notas)", f"{ind_notas[0]}")
-        
-        st.markdown(f"**Distribuição de Despesas do Credor: {credor_selecionado}**")
-        df_ind_desp = df_individual.groupby("grupo_despesa")["valor_total"].sum().reset_index()
-        fig_ind_bar = px.bar(
-            df_ind_desp,
-            x="valor_total",
-            y="grupo_despesa",
-            orientation="h",
-            labels=utils.nomes_atributos,
-            color="valor_total",
-            color_continuous_scale="Mint"
-        )
-        fig_ind_bar.update_layout(coloraxis_showscale=False)
-        st.plotly_chart(fig_ind_bar, use_container_width=True)

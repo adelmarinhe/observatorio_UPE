@@ -3,7 +3,7 @@ import plotly.express as px
 import pandas as pd
 import os
 
-from tabs import empenhos, geral, fornecedores, acao_funcao
+from tabs import empenhos, geral, fornecedores, ficha_credor
 from scripts import tratamento
 
 # CONFIGURAÇÃO DA PÁGINA 
@@ -54,9 +54,10 @@ if modalidades:
     df_filtro = df_filtro[df_filtro["modalidade_empenho"].isin(modalidades)]
 
 # ABAS DO DASHBOARD 
-tab_1, tab_2, tab_3 = st.tabs(["Gestão Executiva e Orçamentária", 
+tab_1, tab_2, tab_3, tab_4 = st.tabs(["Gestão Executiva e Orçamentária", 
                                 "Empenhos",
-                                "Credores"])
+                                "Credores",
+                                "Ficha Individual do Credor"])
 #   tab_4 = "Alocação de Políticas Públicas"
 
 # ABA 1: GESTÃO EXECUTIVA 
@@ -71,8 +72,9 @@ with tab_2:
 with tab_3:
     fornecedores.generate_tab(df_filtro)
 
-# # ABA 4: Análise de Valores Empenhados por Ação e Função
-# with tab_4:
+# ABA 4: FICHA INDIVIDUAL DO CREDOR
+with tab_4:
+    ficha_credor.generate_profile(df_filtro)
 
 # TABELA DE DADOS & DOWNLOAD 
 st.divider()

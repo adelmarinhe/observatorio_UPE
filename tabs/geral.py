@@ -25,22 +25,22 @@ def generate_tab(df_filtro, colunas_monetarias):
         df_evolucao = df_filtro.groupby("Mês/Ano")[colunas_monetarias].sum().reset_index()
         df_evolucao = df_evolucao.sort_values("Mês/Ano")
         
-        fig1 = px.line(
+        fig_1 = px.line(
             df_evolucao, 
             x="Mês/Ano", 
             y=colunas_monetarias,
             labels=utils.nomes_atributos,
             color_discrete_sequence=["#1f77b4", "#ff7f0e", "#2ca02c"]
         )
-        fig1.update_layout(legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
-        st.plotly_chart(fig1, use_container_width=True)
+        fig_1.update_layout(legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
+        st.plotly_chart(fig_1, use_container_width=True)
 
     with col1_2:
         st.markdown("**Distribuição por Fonte de Recurso**")
         df_fonte = df_filtro.groupby("fonte_recurso")["valor_total"].sum().reset_index()
         df_fonte = df_fonte.sort_values(by="valor_total", ascending=True)
         
-        fig2 = px.bar(
+        fig_2 = px.bar(
             df_fonte,
             x="valor_total",
             y="fonte_recurso",
@@ -49,5 +49,46 @@ def generate_tab(df_filtro, colunas_monetarias):
             color="valor_total",
             color_continuous_scale="Blues"
         )
-        fig2.update_layout(coloraxis_showscale=False, yaxis={'type': 'category'})
-        st.plotly_chart(fig2, use_container_width=True)
+        fig_2.update_layout(coloraxis_showscale=False, yaxis={'type': 'category'})
+        st.plotly_chart(fig_2, use_container_width=True)
+
+    col2_1, col2_2 = st.columns(2)
+
+    with col2_1:
+        st.markdown("**Alocação Financeira por Ação**")
+        df_bar_empilhado = df_filtro[df_filtro["valor_total"] > 0].copy()
+        df_bar_empilhado["acao"] = df_bar_empilhado["acao"].fillna("Não Informado")
+        
+        df_grouped_bar_acao = df_bar_empilhado.groupby(["acao"])["valor_total"].sum().reset_index()
+        df_grouped_bar_acao = df_grouped_bar_acao.sort_values(by="valor_total", ascending=True)
+
+        fig_3 = px.bar(
+            df_grouped_bar_acao,
+            x="valor_total",
+            y="acao",
+            orientation="h",
+            labels={"valor_total": "Valor Total (R$)", "acao": "Ação", "subacao": "Subação"},
+            color_discrete_sequence=px.colors.qualitative.Prism
+        )
+        fig_3.update_layout(barmode="stack", yaxis={'categoryorder': 'total ascending'}, legend=dict(orientation="h", y=-0.2))
+        st.plotly_chart(fig_3, use_container_width=True)
+
+    with col2_2:
+        st.markdown("**Alocação Financeira por Função**")
+        df_bar_empilhado_funcao = df_filtro[df_filtro["valor_total"] > 0].copy()
+        df_bar_empilhado_funcao["funcao"] = df_bar_empilhado_funcao["funcao"].fillna("Não Informado")
+        
+        df_grouped_bar_funcao = df_bar_empilhado_funcao.groupby(["funcao"])["valor_total"].sum().reset_index()
+        df_grouped_bar_funcao = df_grouped_bar_funcao.sort_values(by="valor_total", ascending=True)
+
+        fig_4 = px.bar(
+            df_grouped_bar_funcao,
+            x="valor_total",
+            y="funcao",
+            orientation="h",
+            labels={"valor_total": "Valor Total (R$)", "funcao": "Função"},
+            color_discrete_sequence=px.colors.qualitative.Prism
+        )
+        fig_4.update_layout(barmode="stack", yaxis={'categoryorder': 'total ascending'}, legend=dict(orientation="h", y=-0.2))
+        st.plotly_chart(fig_4, use_container_width=True)
+
