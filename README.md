@@ -13,26 +13,26 @@ O Streamlit é uma biblioteca Python e pode ser instalado diretamente via gerenc
 
 > **Recomendação:** Embora não seja obrigatório, recomenda-se a utilização de um ambiente virtual (como `venv` ou `conda`) para evitar potenciais conflitos de dependências entre diferentes versões do Python e de outras bibliotecas de seu sistema.
 
-Para criação de novo ambiente:
+1. Para criação de novo ambiente:
 
 ```bash
 conda create --name nome_do_ambiente python=3.10
 ```
 
-Para ativação do ambiente:
+2. Para ativação do ambiente:
 
 ```bash
 conda activate nome_do_ambiente
 ```
 
-Execute o comando abaixo no terminal para realizar a instalação:
+3. Execute o comando abaixo no terminal para realizar a instalação:
 
 ```bash
 pip install streamlit
 
 ```
 
-Para verificar se a instalação foi concluída com sucesso, execute:
+Obs.: Para verificar se a instalação foi concluída com sucesso, execute:
 
 ```bash
 streamlit hello
