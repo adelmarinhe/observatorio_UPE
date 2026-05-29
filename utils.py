@@ -25,5 +25,14 @@ nomes_atributos = {
     "total": "Total (R$)",
     "qtd_empenhos": "Volume de Empenhos Emitidos (Recorrência)",
     "credor_curto": "Credor",
-    "Credor_Agrupado": "Credor"
+    "Credor_Agrupado": "Credor",
+    'cluster': 'Cluster',
+    '0': 'Despesas Correntes',
+    '1': 'Despesas de Alto Volume',
+    'variable': 'Variável',
+    'fr_curto': 'Fonte de Recurso'
 }
+
+colunas_monetarias = ["valor_empenhado", "valor_liquidado", "valor_total"]
+
+
