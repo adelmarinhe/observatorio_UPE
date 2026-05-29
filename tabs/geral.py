@@ -2,7 +2,7 @@ import streamlit as st
 import plotly.express as px
 import utils
 
-def generate_tab(df_filtro, colunas_monetarias):
+def generate_tab(df_filtro):
     st.subheader("Visão Macro da Execução do Orçamento")
     st.divider()
     
@@ -22,15 +22,15 @@ def generate_tab(df_filtro, colunas_monetarias):
     
     with col1_1:
         st.markdown("**Evolução Mensal dos Gastos**")
-        df_evolucao = df_filtro.groupby("Mês/Ano")[colunas_monetarias].sum().reset_index()
+        df_evolucao = df_filtro.groupby("Mês/Ano")[utils.colunas_monetarias].sum().reset_index()
         df_evolucao = df_evolucao.sort_values("Mês/Ano")
         
         fig_1 = px.line(
             df_evolucao, 
             x="Mês/Ano", 
-            y=colunas_monetarias,
+            y=utils.colunas_monetarias,
             labels=utils.nomes_atributos,
-            color_discrete_sequence=["#1f77b4", "#ff7f0e", "#2ca02c"]
+            color_discrete_sequence=["#ffffff", "#82cbff", "#0072c4"]
         )
         fig_1.update_layout(legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
         st.plotly_chart(fig_1, use_container_width=True)
@@ -39,11 +39,13 @@ def generate_tab(df_filtro, colunas_monetarias):
         st.markdown("**Distribuição por Fonte de Recurso**")
         df_fonte = df_filtro.groupby("fonte_recurso")["valor_total"].sum().reset_index()
         df_fonte = df_fonte.sort_values(by="valor_total", ascending=True)
-        
+
+        df_fonte["fr_curto"] = df_fonte["fonte_recurso"].apply(lambda x: str(x)[:25] + "..." if len(str(x)) > 25 else x)
+
         fig_2 = px.bar(
             df_fonte,
             x="valor_total",
-            y="fonte_recurso",
+            y="fr_curto",
             orientation="h",
             labels=utils.nomes_atributos,
             color="valor_total",
@@ -62,13 +64,16 @@ def generate_tab(df_filtro, colunas_monetarias):
         df_grouped_bar_acao = df_bar_empilhado.groupby(["acao"])["valor_total"].sum().reset_index()
         df_grouped_bar_acao = df_grouped_bar_acao.sort_values(by="valor_total", ascending=True)
 
+        df_grouped_bar_acao["acao_curto"] = df_grouped_bar_acao["acao"].apply(lambda x: str(x)[:25] + "..." if len(str(x)) > 25 else x)
+
+
         fig_3 = px.bar(
             df_grouped_bar_acao,
             x="valor_total",
-            y="acao",
+            y="acao_curto",
             orientation="h",
-            labels={"valor_total": "Valor Total (R$)", "acao": "Ação", "subacao": "Subação"},
-            color_discrete_sequence=px.colors.qualitative.Prism
+            labels=utils.nomes_atributos,
+            color_continuous_scale="Blues"
         )
         fig_3.update_layout(barmode="stack", yaxis={'categoryorder': 'total ascending'}, legend=dict(orientation="h", y=-0.2))
         st.plotly_chart(fig_3, use_container_width=True)
@@ -86,8 +91,8 @@ def generate_tab(df_filtro, colunas_monetarias):
             x="valor_total",
             y="funcao",
             orientation="h",
-            labels={"valor_total": "Valor Total (R$)", "funcao": "Função"},
-            color_discrete_sequence=px.colors.qualitative.Prism
+            labels=utils.nomes_atributos,
+            color_continuous_scale="Blues"
         )
         fig_4.update_layout(barmode="stack", yaxis={'categoryorder': 'total ascending'}, legend=dict(orientation="h", y=-0.2))
         st.plotly_chart(fig_4, use_container_width=True)

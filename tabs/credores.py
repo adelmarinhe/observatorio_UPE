@@ -1,6 +1,7 @@
 import streamlit as st
 import plotly.express as px
 import utils
+from scripts import clustering
 
 def generate_tab(df_filtro):
     st.subheader("Distribuição e Perfil dos Credores")
@@ -30,6 +31,8 @@ def generate_tab(df_filtro):
     k_cred2.metric(f"Valor Médio por Credor", f"R$ {valor_medio_credor:,.2f}")
     k_cred3.metric(f"Maior Saldo: {credor_maior_saldo}", f"R$ {valor_maior_saldo:,.2f}")
 
+    df_clustering = clustering.df_clustering(df_filtro)
+
     st.divider()
 
     # LINHA 1 DE GRÁFICOS
@@ -54,30 +57,41 @@ def generate_tab(df_filtro):
             orientation="h",
             color="valor_total")
         
-        fig_abc.update_layout(coloraxis_showscale=False, xaxis_tickangle=0, yaxis={'categoryorder': 'total ascending'})
+        fig_abc.update_layout(coloraxis_showscale=False, 
+                              xaxis_tickangle=0, 
+                              yaxis={'categoryorder': 'total ascending'})
         st.plotly_chart(fig_abc, use_container_width=True)
 
     with col_c2:
+        clustering.clustering_credores(df_clustering)
 
-        st.markdown("**Evolução Histórica de Participação dos Grandes Credores**")
-        df_time_cred = df_filtro.copy()
+    st.divider()
 
-        top5_nomes = df_filtro.groupby("credor")["valor_total"].sum().nlargest(5).index
-        df_time_cred["Credor_Agrupado"] = df_time_cred["credor"].apply(lambda x: x if x in top5_nomes else "OUTROS FORNECEDORES")
-        
-        df_time_grouped = df_time_cred.groupby(["Ano", "Credor_Agrupado"])["valor_total"].sum().reset_index()
-        df_time_grouped = df_time_grouped.sort_values("Ano")
-        df_time_grouped["Ano"] = df_time_grouped["Ano"].astype(str)
+    # LINHA 2 DE GRÁFICOS
+    df_time_cred = df_filtro.copy()
 
-        fig_area = px.area(
-            df_time_grouped,
-            x="Ano",
-            y="valor_total",
-            color="Credor_Agrupado",
-            labels=utils.nomes_atributos,
-            color_discrete_sequence=px.colors.qualitative.Pastel
-        )
+    top5_nomes = df_filtro.groupby("credor")["valor_total"].sum().nlargest(5).index
+    df_time_cred["Credor_Agrupado"] = df_time_cred["credor"].apply(lambda x: x if x in top5_nomes else "OUTROS FORNECEDORES")
+    
+    df_time_cred = df_time_cred[df_time_cred['Credor_Agrupado'] != 'OUTROS FORNECEDORES']
 
-        fig_area.update_layout(barmode="stack", yaxis={'categoryorder': 'total ascending'}, legend=dict(orientation="h", y=-0.2))
+    df_time_grouped = df_time_cred.groupby(["Ano", "Credor_Agrupado"])["valor_total"].sum().reset_index()
+    df_time_grouped = df_time_grouped.sort_values("Ano")
+    df_time_grouped["Ano"] = df_time_grouped["Ano"].astype(str)
+    st.markdown("**Evolução Histórica de Participação dos Grandes Credores**")
 
-        st.plotly_chart(fig_area, use_container_width=True)
+
+    fig_area = px.area(
+        df_time_grouped,
+        x="Ano",
+        y="valor_total",
+        color="Credor_Agrupado",
+        labels=utils.nomes_atributos,
+        color_discrete_sequence=px.colors.qualitative.Plotly 
+    )
+
+    fig_area.update_layout(barmode="stack", 
+                            yaxis={'categoryorder': 'total ascending'}, 
+                            legend=dict(orientation="h", y=-0.2))
+
+    st.plotly_chart(fig_area, use_container_width=True)

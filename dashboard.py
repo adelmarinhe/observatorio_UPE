@@ -3,8 +3,9 @@ import plotly.express as px
 import pandas as pd
 import os
 
-from tabs import empenhos, geral, fornecedores, ficha_credor
-from scripts import tratamento
+from tabs import credores, empenhos, geral, ficha_credor
+from scripts import tratamento, filtros
+import utils
 
 # CONFIGURAÇÃO DA PÁGINA 
 st.set_page_config(page_title="UPE - Despesas Governamentais", page_icon="🏛️", layout="wide")
@@ -32,37 +33,19 @@ else:
 
 # TRATAMENTO DE DADOS 
 df = tratamento.treat_dates(df)
-colunas_monetarias = ["valor_empenhado", "valor_liquidado", "valor_total"]
-df = tratamento.treat_values(df, colunas_monetarias)
+df = tratamento.treat_values(df, utils.colunas_monetarias)
 
 # FILTROS LATERAIS (GLOBAIS) 
 st.sidebar.header("Filtros Globais")
 
-anos_disponiveis = df["Ano"].dropna().unique().astype(int)
-ano = st.sidebar.multiselect("Ano", sorted(anos_disponiveis, reverse=True))
-
-unidades = st.sidebar.multiselect("Unidade Gestora", sorted(df["unidade_gestora"].dropna().unique()))
-modalidades = st.sidebar.multiselect("Modalidade de Empenho", sorted(df["modalidade_empenho"].dropna().unique()))
-
-# Aplicar filtros
-df_filtro = df.copy()
-if ano:
-    df_filtro = df_filtro[df_filtro["Ano"].isin(ano)]
-if unidades:
-    df_filtro = df_filtro[df_filtro["unidade_gestora"].isin(unidades)]
-if modalidades:
-    df_filtro = df_filtro[df_filtro["modalidade_empenho"].isin(modalidades)]
+df_filtro = filtros.gerar_filtros(df)
 
 # ABAS DO DASHBOARD 
-tab_1, tab_2, tab_3, tab_4 = st.tabs(["Gestão Executiva e Orçamentária", 
-                                "Empenhos",
-                                "Credores",
-                                "Ficha Individual do Credor"])
-#   tab_4 = "Alocação de Políticas Públicas"
+tab_1, tab_2, tab_3, tab_4 = st.tabs(["Gestão Executiva e Orçamentária", "Empenhos", "Credores", "Ficha Individual do Credor"])
 
 # ABA 1: GESTÃO EXECUTIVA 
 with tab_1:
-    geral.generate_tab(df_filtro, colunas_monetarias)   
+    geral.generate_tab(df_filtro)   
 
 # ABA 2: EMPENHOS
 with tab_2:
@@ -70,7 +53,7 @@ with tab_2:
 
 # ABA 3: FORNECEDORES E CONTRATAÇÕES 
 with tab_3:
-    fornecedores.generate_tab(df_filtro)
+    credores.generate_tab(df_filtro)
 
 # ABA 4: FICHA INDIVIDUAL DO CREDOR
 with tab_4:

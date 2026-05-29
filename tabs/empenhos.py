@@ -1,12 +1,11 @@
 import streamlit as st
 import plotly.express as px
 import utils
+from scripts import previsao
 
 def generate_tab(df_filtro):
     st.subheader("Métricas de Empenhos Realizados")
-    st.divider()
 
-    # Cálculos dos KPIs (Baseados na tabela já filtrada lateralmente)
     total_empenhado_filtrado = df_filtro['valor_empenhado'].sum()
     qtd_empenhos_filtrado = df_filtro.shape
 
@@ -15,11 +14,9 @@ def generate_tab(df_filtro):
     k4_1.metric("Valor Total Empenhado (Filtro)", f"R$ {(total_empenhado_filtrado/(pow(10, 6))):,.2f} M")
     k4_2.metric("Quantidade Total de Empenhos", f"{qtd_empenhos_filtrado[0]}")
 
-    # TODO: adicionar classificação por tipo de empenho
-
     st.divider()
 
-    col4_graf1, col4_graf2 = st.columns(2)
+    col4_graf1, col4_graf2, col4_graf3 = st.columns(3)
 
     with col4_graf1:
         st.markdown("**Distribuição das Faixas de Valores Empenhados**")
@@ -61,31 +58,24 @@ def generate_tab(df_filtro):
         fig_2.update_layout(coloraxis_showscale=False, margin=dict(t=10, b=10))
         st.plotly_chart(fig_2, use_container_width=True)
 
-    # st.divider()
+    with col4_graf3:
+        st.markdown("**Empenhado/Liquidado vs. Tipo de Despesa**")
+        df_relacao = df_filtro.groupby("grupo_despesa")[["valor_empenhado", "valor_liquidado"]].sum().reset_index()
 
-    # st.markdown("**Análise de Volume vs. Gasto Financeiro (Despesa Gerencial)**")
-    # df_disp = df_filtro.groupby("grupo_despesa").agg(
-    #     valor_total=("valor_total", "sum"),
-    #     qtd_empenhos=("n_empenho", "count")
-    # ).reset_index()
-
-    # fig_5 = px.scatter(df_disp, 
-    #                     x="qtd_empenhos", 
-    #                     y="valor_total", 
-    #                     size="valor_total", 
-    #                     color="valor_total",
-    #                     text="grupo_despesa",
-    #                     labels=utils.nomes_atributos,
-    #                     size_max=40,
-    #                     color_continuous_scale="Blues")
-
-    # fig_5.update_traces(textposition="top center")
+        fig_4 = px.bar(
+            df_relacao, 
+            x="grupo_despesa", 
+            y=["valor_empenhado", "valor_liquidado"],
+            barmode="group",
+            labels=utils.nomes_atributos
+        )
+        st.plotly_chart(fig_4, use_container_width=True)
 
     # st.plotly_chart(fig_5, use_container_width=True)
 
     st.divider()
 
-    col4_2_graf1, col4_2_graf2 = st.columns(2)
+    col4_2_graf1, col4_2_graf2 = st.columns([2,4])
 
     with col4_2_graf1:
         st.markdown("**Análise por Modalidade do Empenho**")
@@ -104,14 +94,4 @@ def generate_tab(df_filtro):
         st.plotly_chart(fig_3, use_container_width=True)
 
     with col4_2_graf2:
-        st.markdown("**Relação Empenhado vs. Liquidado por Tipo de Despesa**")
-        df_relacao = df_filtro.groupby("grupo_despesa")[["valor_empenhado", "valor_liquidado"]].sum().reset_index()
-
-        fig_4 = px.bar(
-            df_relacao, 
-            x="grupo_despesa", 
-            y=["valor_empenhado", "valor_liquidado"],
-            barmode="group",
-            labels=utils.nomes_atributos
-        )
-        st.plotly_chart(fig_4, use_container_width=True)
+        previsao.generate_previsao(df_filtro)
