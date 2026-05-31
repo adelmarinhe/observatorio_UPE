@@ -1,0 +1,38 @@
+nomes_atributos = {
+    "n_empenho": "Número do Empenho",
+    "unidade_gestora": "Unidade Gestora",
+    "credor": "Credor",
+    "valor_empenhado": "Valor Empenhado (R$)",
+    "valor_liquidado": "Valor Liquidado (R$)",
+    "valor_total": "Valor Total (R$)",
+    "funcao": "Função",
+    "programa": "Programa",
+    "acao": "Ação",
+    "modalidade_empenho": "Modalidade de Empenho",
+    "modalidade_licitacao": "Modalidade de Licitação",
+    "n_licitacao": "Número da Licitação",
+    "obs_empenho": "Observação do Empenho",
+    "tipo_despesa": "Tipo de Despesa",
+    "despesa": "Despesa",
+    "fonte_recurso": "Fonte de Recurso",
+    "cat_economica": "Categoria Econômica",
+    "grupo_despesa": "Grupo de Despesa",
+    "modalidade_aplicacao": "Modalidade de Aplicação",
+    "elemento_despesa": "Elemento de Despesa",
+    "data": "Data",
+    "value": "Valor (R$)",
+    "count": "Quantidade de Ocorrências",
+    "total": "Total (R$)",
+    "qtd_empenhos": "Volume de Empenhos Emitidos (Recorrência)",
+    "credor_curto": "Credor",
+    "Credor_Agrupado": "Credor",
+    'cluster': 'Cluster',
+    '0': 'Despesas Correntes',
+    '1': 'Despesas de Alto Volume',
+    'variable': 'Variável',
+    'fr_curto': 'Fonte de Recurso'
+}
+
+colunas_monetarias = ["valor_empenhado", "valor_liquidado", "valor_total"]
+
+

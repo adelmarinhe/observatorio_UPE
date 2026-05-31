@@ -13,14 +13,26 @@ O Streamlit é uma biblioteca Python e pode ser instalado diretamente via gerenc
 
 > **Recomendação:** Embora não seja obrigatório, recomenda-se a utilização de um ambiente virtual (como `venv` ou `conda`) para evitar potenciais conflitos de dependências entre diferentes versões do Python e de outras bibliotecas de seu sistema.
 
-Execute o comando abaixo no terminal para realizar a instalação:
+1. Para criação de novo ambiente:
+
+```bash
+conda create --name nome_do_ambiente python=3.10
+```
+
+2. Para ativação do ambiente:
+
+```bash
+conda activate nome_do_ambiente
+```
+
+3. Execute o comando abaixo no terminal para realizar a instalação:
 
 ```bash
 pip install streamlit
 
 ```
 
-Para verificar se a instalação foi concluída com sucesso, execute:
+Obs.: Para verificar se a instalação foi concluída com sucesso, execute:
 
 ```bash
 streamlit hello
@@ -31,10 +43,10 @@ Uma nova aba será aberta automaticamente no seu navegador padrão confirmando o
 
 ## 2. Instalação das Dependências
 
-Para a manipulação de dados e renderização dos gráficos do dashboard, instalamos as bibliotecas **Pandas** e **Plotly**:
+Para a manipulação de dados e renderização dos gráficos do dashboard, deve-se instalar as seguintes bibliotecas:
 
 ```bash
-pip install pandas plotly numpy
+pip install pandas plotly numpy scikit-learn xgboost
 
 ```
 
