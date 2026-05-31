@@ -4,6 +4,8 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import warnings
+from scripts import graphs_config
+
 warnings.filterwarnings('ignore')
 
 from sklearn.linear_model import LinearRegression, Ridge
@@ -169,7 +171,7 @@ def generate_previsao(df_filtro):
     })
 
     df_final_plot = pd.concat([historico, ponte, df_prev_plot], ignore_index=True)
-    st.markdown("**Previsão de Execução Orçamentária para os Próximos 3 Meses (XGBoost)**")
+    st.subheader("**Previsão de Execução Orçamentária para os Próximos 3 Meses**")
     fig_previsao = px.line(
         df_final_plot, 
         x='data', 
@@ -178,13 +180,13 @@ def generate_previsao(df_filtro):
         markers=True,
         color_discrete_map={
             'Histórico': '#1a6db5',
-            'Previsão (3 meses)': "#ffffff",
-            'Transição': "#ffffff"
+            'Previsão (3 meses)': "#ff3c3c",
+            'Transição': "#ff3c3c"
         }
     )
 
     fig_previsao.for_each_trace(lambda t: t.update(line=dict(dash='dot')) if t.name == 'Transição' else ())
-    fig_previsao.for_each_trace(lambda t: t.update(line=dict(dash='dash'), marker=dict(symbol='star', size=10)) if t.name == 'Previsão (3 meses)' else ())
+    fig_previsao.for_each_trace(lambda t: t.update(line=dict(dash='dash'), marker=dict(symbol='star', size=7)) if t.name == 'Previsão (3 meses)' else ())
     
     fig_previsao.for_each_trace(lambda t: t.update(showlegend=False) if t.name == 'Transição' else ())
 
@@ -192,10 +194,12 @@ def generate_previsao(df_filtro):
         xaxis_title='Mês', 
         yaxis_title='Desembolso (R$)',
         hovermode='x unified',
-        yaxis_tickformat=',.0f', 
-        height=480
-    )
+        yaxis_tickformat=',.0f')
+    
+    fig_previsao.update_layout(coloraxis_showscale=False,
+                            margin=dict(t=15, b=15),
+                            legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0))
+    
+    graphs_config.config_layout(fig_previsao)
 
     st.plotly_chart(fig_previsao, use_container_width=True)
-
-

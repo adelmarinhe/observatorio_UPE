@@ -1,10 +1,10 @@
 import streamlit as st
 import plotly.express as px
 import utils
+from scripts import graphs_config
 
 def generate_tab(df_filtro):
-    st.subheader("Visão Macro da Execução do Orçamento")
-    st.divider()
+    st.header("Visão Macro da Execução do Orçamento")
     
     total_empenhado = df_filtro["valor_empenhado"].sum()
     total_liquidado = df_filtro["valor_liquidado"].sum()
@@ -17,11 +17,10 @@ def generate_tab(df_filtro):
     k3.metric("Total Pago", f"R$ {(total_pago/(pow(10, 6))):,.2f} M")
     k4.metric("Índice de Execução", f"{indice_execucao:.1f}%")
     
-    st.divider()
     col1_1, col1_2 = st.columns(2)
     
     with col1_1:
-        st.markdown("**Evolução Mensal dos Gastos**")
+        st.subheader("**Evolução Mensal dos Gastos**")
         df_evolucao = df_filtro.groupby("Mês/Ano")[utils.colunas_monetarias].sum().reset_index()
         df_evolucao = df_evolucao.sort_values("Mês/Ano")
         
@@ -30,13 +29,15 @@ def generate_tab(df_filtro):
             x="Mês/Ano", 
             y=utils.colunas_monetarias,
             labels=utils.nomes_atributos,
-            color_discrete_sequence=["#ffffff", "#82cbff", "#0072c4"]
+            color_discrete_sequence=["#ffffff", "#ff3c3c", "#0072c4"]
         )
-        fig_1.update_layout(legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
+
+        graphs_config.config_layout(fig_1)
+        fig_1.update_layout(legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0))
         st.plotly_chart(fig_1, use_container_width=True)
 
     with col1_2:
-        st.markdown("**Distribuição por Fonte de Recurso**")
+        st.subheader("**Distribuição por Fonte de Recurso**")
         df_fonte = df_filtro.groupby("fonte_recurso")["valor_total"].sum().reset_index()
         df_fonte = df_fonte.sort_values(by="valor_total", ascending=True)
 
@@ -51,13 +52,18 @@ def generate_tab(df_filtro):
             color="valor_total",
             color_continuous_scale="Blues"
         )
-        fig_2.update_layout(coloraxis_showscale=False, yaxis={'type': 'category'})
+        graphs_config.config_layout(fig_2)
+        fig_2.update_layout(coloraxis_showscale=False, yaxis={'type': 'category'},
+                            paper_bgcolor="rgba(0,0,0,0)",
+                            plot_bgcolor="rgba(0,0,0,0)"
+                            )
         st.plotly_chart(fig_2, use_container_width=True)
 
+  
     col2_1, col2_2 = st.columns(2)
 
     with col2_1:
-        st.markdown("**Alocação Financeira por Ação**")
+        st.subheader("**Alocação Financeira por Ação**")
         df_bar_empilhado = df_filtro[df_filtro["valor_total"] > 0].copy()
         df_bar_empilhado["acao"] = df_bar_empilhado["acao"].fillna("Não Informado")
         
@@ -73,13 +79,19 @@ def generate_tab(df_filtro):
             y="acao_curto",
             orientation="h",
             labels=utils.nomes_atributos,
+            color="valor_total",
             color_continuous_scale="Blues"
         )
-        fig_3.update_layout(barmode="stack", yaxis={'categoryorder': 'total ascending'}, legend=dict(orientation="h", y=-0.2))
+        fig_3.update_layout(barmode="stack", yaxis={'categoryorder': 'total ascending'}, coloraxis_showscale=False, legend=dict(orientation="h", y=-0.2),
+                            paper_bgcolor="rgba(0,0,0,0)",
+                            plot_bgcolor="rgba(0,0,0,0)"
+                            )
+        graphs_config.config_layout(fig_3)
+        
         st.plotly_chart(fig_3, use_container_width=True)
 
     with col2_2:
-        st.markdown("**Alocação Financeira por Função**")
+        st.subheader("**Alocação Financeira por Função**")
         df_bar_empilhado_funcao = df_filtro[df_filtro["valor_total"] > 0].copy()
         df_bar_empilhado_funcao["funcao"] = df_bar_empilhado_funcao["funcao"].fillna("Não Informado")
         
@@ -92,8 +104,15 @@ def generate_tab(df_filtro):
             y="funcao",
             orientation="h",
             labels=utils.nomes_atributos,
+            color="valor_total",
             color_continuous_scale="Blues"
         )
-        fig_4.update_layout(barmode="stack", yaxis={'categoryorder': 'total ascending'}, legend=dict(orientation="h", y=-0.2))
+        graphs_config.config_layout(fig_4)
+
+        fig_4.update_layout(paper_bgcolor="rgba(0,0,0,0)",
+                            plot_bgcolor="rgba(0,0,0,0)",
+                            barmode="stack", yaxis={'categoryorder': 'total ascending'}, 
+                            coloraxis_showscale=False, legend=dict(orientation="h", y=-0.2))
         st.plotly_chart(fig_4, use_container_width=True)
 
+  

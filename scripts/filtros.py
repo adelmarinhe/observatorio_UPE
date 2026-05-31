@@ -2,7 +2,6 @@ import streamlit as st
 
 import pandas as pd
 
-
 def gerar_filtros(df):
     anos_disponiveis = df["Ano"].dropna().unique().astype(int)
     ano = st.sidebar.multiselect("Ano", sorted(anos_disponiveis, reverse=True))

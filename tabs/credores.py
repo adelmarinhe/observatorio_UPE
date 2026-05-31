@@ -1,7 +1,7 @@
 import streamlit as st
 import plotly.express as px
 import utils
-from scripts import clustering
+from scripts import clustering, graphs_config
 
 def generate_tab(df_filtro):
     st.subheader("Distribuição e Perfil dos Credores")
@@ -33,13 +33,11 @@ def generate_tab(df_filtro):
 
     df_clustering = clustering.df_clustering(df_filtro)
 
-    st.divider()
-
     # LINHA 1 DE GRÁFICOS
     col_c1, col_c2 = st.columns(2)
 
     with col_c1:
-        st.markdown("**Curva ABC de Credores**")
+        st.subheader("**Curva ABC de Credores**")
 
         df_abc = df_filtro.groupby("credor")["valor_total"].sum().reset_index()
         df_abc = df_abc.sort_values(by="valor_total", ascending=False).reset_index(drop=True)
@@ -55,43 +53,75 @@ def generate_tab(df_filtro):
             y="credor_curto",
             labels=utils.nomes_atributos,
             orientation="h",
-            color="valor_total")
+            color="valor_total",
+            color_continuous_scale="Blues"
+            )
         
         fig_abc.update_layout(coloraxis_showscale=False, 
                               xaxis_tickangle=0, 
                               yaxis={'categoryorder': 'total ascending'})
+        graphs_config.config_layout(fig_abc)
+        
         st.plotly_chart(fig_abc, use_container_width=True)
 
     with col_c2:
         clustering.clustering_credores(df_clustering)
 
-    st.divider()
-
     # LINHA 2 DE GRÁFICOS
+
     df_time_cred = df_filtro.copy()
 
     top5_nomes = df_filtro.groupby("credor")["valor_total"].sum().nlargest(5).index
     df_time_cred["Credor_Agrupado"] = df_time_cred["credor"].apply(lambda x: x if x in top5_nomes else "OUTROS FORNECEDORES")
     
-    df_time_cred = df_time_cred[df_time_cred['Credor_Agrupado'] != 'OUTROS FORNECEDORES']
 
     df_time_grouped = df_time_cred.groupby(["Ano", "Credor_Agrupado"])["valor_total"].sum().reset_index()
     df_time_grouped = df_time_grouped.sort_values("Ano")
     df_time_grouped["Ano"] = df_time_grouped["Ano"].astype(str)
-    st.markdown("**Evolução Histórica de Participação dos Grandes Credores**")
 
+    col_c3, col_c4 = st.columns(2)
 
-    fig_area = px.area(
-        df_time_grouped,
-        x="Ano",
-        y="valor_total",
-        color="Credor_Agrupado",
-        labels=utils.nomes_atributos,
-        color_discrete_sequence=px.colors.qualitative.Plotly 
-    )
+    with col_c3:
+        df_pizza = (df_time_grouped.groupby("Credor_Agrupado", as_index=False)["valor_total"].sum())
 
-    fig_area.update_layout(barmode="stack", 
-                            yaxis={'categoryorder': 'total ascending'}, 
-                            legend=dict(orientation="h", y=-0.2))
+        fig_pizza = px.pie(
+            df_pizza,
+            names="Credor_Agrupado",
+            values="valor_total",
+            hole=0.4  # transforma em donut (opcional)
+        )
 
-    st.plotly_chart(fig_area, use_container_width=True)
+        fig_pizza.update_traces(
+            textposition="inside",
+            textinfo="percent"
+        )
+        graphs_config.config_layout(fig_pizza)
+
+        fig_pizza.update_layout(barmode="stack", 
+                                yaxis={'categoryorder': 'total ascending'}, 
+                                legend=dict(orientation="v", xanchor='left', yanchor='top'))
+
+        st.subheader("Distribuição dos Valores por Credor")
+        st.plotly_chart(fig_pizza, use_container_width=True)
+        
+
+    with col_c4:
+        df_time_cred = df_time_cred[df_time_cred['Credor_Agrupado'] != 'OUTROS FORNECEDORES']
+
+        fig_area = px.area(
+            df_time_grouped,
+            x="Ano",
+            y="valor_total",
+            color="Credor_Agrupado",
+            labels=utils.nomes_atributos,
+            color_discrete_sequence=px.colors.qualitative.Plotly 
+        )
+
+        fig_area.update_layout(barmode="stack", 
+                                yaxis={'categoryorder': 'total ascending'}, 
+                                legend=dict(orientation="h", y=-0.4))
+        
+        graphs_config.config_layout(fig_area)
+
+        st.subheader("**Evolução Histórica de Participação dos Grandes Credores**")
+        st.plotly_chart(fig_area, use_container_width=True)
