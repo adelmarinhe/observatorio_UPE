@@ -6,6 +6,8 @@ from sklearn.metrics import silhouette_score
 import plotly.express as px
 import streamlit as st
 
+from scripts import graphs_config
+
 import utils
 
 numerical_cols = ['valor_empenhado', 'valor_liquidado', 'valor_total']
@@ -25,10 +27,7 @@ def df_clustering(df):
 
     # escolha do melhor número de clusters
     scaler1 = StandardScaler()
-    df_scaled = pd.DataFrame(
-        scaler1.fit_transform(df_clustering[numerical_cols]),
-        columns=numerical_cols
-    )
+    df_scaled = pd.DataFrame(scaler1.fit_transform(df_clustering[numerical_cols]), columns=numerical_cols)
 
     silhouette_scores_1 = []
     for k in range(2, 11):
@@ -44,14 +43,12 @@ def df_clustering(df):
     kmeans_final = KMeans(n_clusters=best_k1, init='k-means++', max_iter=300, n_init=10, random_state=42)
     df_clustering['cluster'] = kmeans_final.fit_predict(df_scaled)
     
-    df_clustering['cluster'] = df_clustering['cluster'].replace('0', 'Despesas Correntes')
-    df_clustering['cluster'] = df_clustering['cluster'].replace('1', 'Despesas de Alto Volume')
+    df_clustering['cluster'] = df_clustering['cluster'].replace(0, 'Despesas Correntes')
+    df_clustering['cluster'] = df_clustering['cluster'].replace(1, 'Despesas de Alto Volume')
 
     return df_clustering
 
 def clustering_despesas(df):
-    # df_clustering = clustering(df_filtro)
-
     fig_cluster = px.scatter(
         df,
         x='valor_empenhado',
@@ -59,7 +56,7 @@ def clustering_despesas(df):
         color='cluster',
         opacity=0.7,
         labels=utils.nomes_atributos,
-        color_discrete_sequence=["#1f77b4", "#d62728"],
+        color_discrete_sequence=["#1f77b4", "#ffffff"],
         hover_data=['credor', 'tipo_despesa', 'valor_total']
     )
 
@@ -70,9 +67,8 @@ def clustering_despesas(df):
 
 
 def clustering_credores(df):
-    # df_clustering = clustering(df_filtro)
-
     df_credor_cluster = df.groupby(['cluster', 'credor'])['valor_total'].sum().reset_index()
+    # df_credor_cluster['nome_cluster'] = df_credor_cluster['cluster'].map({0: 'Despesas Correntes', 1: 'Despesas de Alto Volume'})
 
     top_5_credores = (
         df_credor_cluster.sort_values(['cluster', 'valor_total'], ascending=[True, False])
@@ -89,16 +85,21 @@ def clustering_credores(df):
         color='cluster',
         orientation='h',
         labels=utils.nomes_atributos,
-        color_discrete_map={'Despesas Correntes': "#1f77b4", 'Despesas de Alto Volume': "#d62728"}
+        color_discrete_sequence=["#1f77b4", "#ffffff"],
+        hover_data=['credor', 'cluster', 'valor_total']
     )
 
     fig_bar.update_yaxes(categoryorder='total ascending')
 
     fig_bar.update_layout(coloraxis_showscale=False, 
                           xaxis_tickangle=0, 
-                          yaxis={'categoryorder': 'total ascending'})
+                          yaxis={'categoryorder': 'total ascending'},
+                          legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=0)
+                          )
+    
+    graphs_config.config_layout(fig_bar)
 
-    st.markdown("**Top 5 Credores por Cluster Identificado**")
+    st.subheader("**Top 5 Credores por Cluster Identificado**")
     st.plotly_chart(fig_bar, use_container_width=True)
 
 
