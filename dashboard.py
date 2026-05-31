@@ -47,7 +47,7 @@ with st.sidebar:
 df_filtro = filtros.gerar_filtros(df)
 
 # ABAS DO DASHBOARD 
-tab_1, tab_2, tab_3, tab_4 = st.tabs(["Gestão Executiva e Orçamentária", "Empenhos", "Credores", "Ficha Individual do Credor"])
+tab_1, tab_2, tab_3, tab_4 = st.tabs(["Geral", "Empenhos", "Credores", "Ficha Individual do Credor"])
 
 # ABA 1: GESTÃO EXECUTIVA 
 with tab_1:
