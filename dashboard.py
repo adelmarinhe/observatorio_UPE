@@ -1,7 +1,6 @@
 import streamlit as st
 import plotly.express as px
 import pandas as pd
-import os
 
 from tabs import credores, empenhos, geral, ficha_credor
 from scripts import tratamento, filtros

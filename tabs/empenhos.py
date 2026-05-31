@@ -41,7 +41,7 @@ def generate_tab(df_filtro):
         st.plotly_chart(fig_1, use_container_width=True)
 
     with col4_graf2:
-        st.subheader("**Evolução Anual do Valor Empenhado**")
+        st.subheader("**Distribuição Anual do Valor Empenhado**")
         
         # Agrupamento por ano para o novo gráfico solicitado
         df_empenhado_ano = df_filtro.groupby("Ano")["valor_empenhado"].sum().reset_index()

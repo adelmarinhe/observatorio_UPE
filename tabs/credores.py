@@ -123,5 +123,5 @@ def generate_tab(df_filtro):
         
         graphs_config.config_layout(fig_area)
 
-        st.subheader("**Evolução Histórica de Participação dos Grandes Credores**")
+        st.subheader("**Histórico de Participação dos Grandes Credores**")
         st.plotly_chart(fig_area, use_container_width=True)
