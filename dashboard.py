@@ -5,13 +5,14 @@ import os
 
 from tabs import credores, empenhos, geral, ficha_credor
 from scripts import tratamento, filtros
-import utils
+import utils, config
 
 # CONFIGURAÇÃO DA PÁGINA 
-st.set_page_config(page_title="UPE - Despesas Governamentais", page_icon="🏛️", layout="wide")
+# st.set_page_config(page_title="UPE - Despesas Governamentais", page_icon="🏛️", layout="wide")
 
-st.title("UPE - Dashboard de Despesas Públicas")
-st.markdown("Análise da execução orçamentária e fornecedores baseada nos dados do e-Fisco.")
+config.config("UPE - Despesas Governamentais")
+st.title("Dashboard de Despesas da Pró-Reitoria de Administração e Finanças da UPE")
+st.markdown("Análise da execução orçamentária e fornecedores baseada nos dados de despesas gerais do Portal da Transparência do Governo de Pernambuco.")
 
 # CARREGAMENTO DE DADOS 
 @st.cache_data
@@ -36,7 +37,12 @@ df = tratamento.treat_dates(df)
 df = tratamento.treat_values(df, utils.colunas_monetarias)
 
 # FILTROS LATERAIS (GLOBAIS) 
-st.sidebar.header("Filtros Globais")
+with st.sidebar:
+    # Você pode usar um link da web ou um arquivo local (ex: "imagens/logo_upe.png")
+    st.image("images/upe_logo-removebg-preview.png", use_container_width=True)
+    st.markdown("**Pró-Reitoria de Adminstração e Finanças** \nPROADMI - Financeiro", text_alignment='center')
+    st.divider()
+    st.header("Filtros Globais")
 
 df_filtro = filtros.gerar_filtros(df)
 
