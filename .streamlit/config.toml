@@ -1,0 +1,6 @@
+[theme]
+primaryColor = "#1F77B4"          # Cor dos botões, abas selecionadas e destaques
+backgroundColor = "#0B0F19"      # Cor de fundo principal do app
+secondaryBackgroundColor = "#0F172A" # Cor de fundo dos filtros laterais (sidebar) e cards
+textColor = "#ffffff"            # Cor principal das fontes
+font = "sans serif"              # Estilo geral da fonte (sans serif, serif ou monospace)
