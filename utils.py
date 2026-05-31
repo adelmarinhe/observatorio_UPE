@@ -30,7 +30,9 @@ nomes_atributos = {
     '0': 'Despesas Correntes',
     '1': 'Despesas de Alto Volume',
     'variable': 'Variável',
-    'fr_curto': 'Fonte de Recurso'
+    'fr_curto': 'Fonte de Recurso',
+    'num_grupo': 'Grupo',
+    'Credor_Agrupado': 'Credor'
 }
 
 colunas_monetarias = ["valor_empenhado", "valor_liquidado", "valor_total"]
